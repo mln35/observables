@@ -1,16 +1,15 @@
 import { IObserver } from "../Interfaces/IObserver";
 import { ISubject } from "../Interfaces/ISubject";
+
 export class Vanne implements IObserver{
     private div=document.createElement('div');
     private data:number;//
     private state:boolean=true;
     constructor(private name:string, private seuil:number, private Observable:ISubject){
         this.Observable.subscribe(this);
-        console.log(`this.data: ${this.data}`)
         this.state=true;
         let container=document.querySelector("#pompe-container");
         //div_id=pompe
-        // this.div.className="off";
         this.div.id=this.name;
         //input
         let input=document.createElement('input');
