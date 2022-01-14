@@ -1,0 +1,25 @@
+#pompe-container{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    background-color: silver;
+}
+h4, h2{
+    text-align: center;
+}
+.off{
+    background-color: red;
+    border: 2px solid black;
+}
+.on{
+    background-color: green;
+    border: 2px solid black;
+}
+.unsubs{
+    background-color: #ccc;
+    border: 2px solid black;
+}
+.seuil{
+    display: inline-block;
+    width: 100px;
+}
