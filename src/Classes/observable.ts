@@ -1,23 +1,17 @@
 import {IObserver} from '../Interfaces/IObserver'
 import { ISubject } from '../Interfaces/ISubject' 
 
-export class Humidity implements ISubject{
+export class Transaction implements ISubject{
     private observers:IObserver[]=[];
-    private controller:HTMLInputElement;
+    private transactionList:Object[]=[];
     constructor(private humidity:number){
-        this.controller=document.querySelector('#humidity-control') as HTMLInputElement;
-        this.controller.value=this.humidity.toString();
-        this.controller.addEventListener('change', (e:Event)=>{
-            this.setHumidity(+this.controller.value);
-        })
+        
     }
     subscribe(observer: IObserver) {
         this.observers.push(observer);
-        this.notifyObserver();
-        
+        this.notifyObserver();        
     }
     unsubscribe(observer:IObserver){
-        
         this.observers=this.observers.filter(obs =>{
             return obs!==observer;
         })
@@ -25,16 +19,9 @@ export class Humidity implements ISubject{
     }
     notifyObserver() {
         this.observers.forEach(element => {
-            console.log(`this.humidity: ${this.humidity}`)
-            element.update(this.humidity);
+            
+            element.update(this.transactionList);
         });
     }
-    setHumidity(value:number){
-        this.humidity=value;
-        this.notifyObserver();
-    }
-    testFunction(f: () =>void, g:()=>void){
-        f();
-        g();
-    }
+   
 }

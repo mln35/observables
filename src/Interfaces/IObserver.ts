@@ -1,3 +1,5 @@
+import { ISubject } from "./ISubject";
+
 export interface IObserver{
-    update(data:number);
+    update(data:any []);
 }

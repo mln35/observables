@@ -1,70 +1,27 @@
 import { IObserver } from "../Interfaces/IObserver";
 import { ISubject } from "../Interfaces/ISubject";
+import { View } from "../view/viewHandler";
 
-export class Vanne implements IObserver{
-    private div=document.createElement('div');
-    private data:number;//
-    private state:boolean=true;
-    constructor(private name:string, private seuil:number, private Observable:ISubject){
-        this.Observable.subscribe(this);
-        this.state=true;
-        let container=document.querySelector("#pompe-container");
-        //div_id=pompe
-        this.div.id=this.name;
-        //input
-        let input=document.createElement('input');
-        input.className="seuil";
-        input.type="number";
-        input.value=this.seuil.toString();
-        input.addEventListener('change', (e:Event)=>{
-            this.setSeuil(+input.value);
-        })
-        //title h4
-        let title=document.createElement('h4');
-        title.innerHTML=this.name;
-        //button
-        let button=document.createElement('button');
-        button.innerHTML="Unsubscribe";
-        button.addEventListener('click', (e:Event)=>{
-            
-            if(button.innerHTML==="Unsubscribe"){
-                button.innerHTML="Subscribe";
-                this.Observable.unsubscribe(this);
-                this.state=false;
-                this.div.className="unsubs";
+//class solde implementation
+export class Solde implements IObserver{
+    constructor(private solde:number, private view:View){
+        this.render();
+    }
+    update(data: any []) {
+        let totalDebit=0;
+        let totalCredit=0;
+        data.forEach(obj =>{
+            if(obj.type==='Debit'){
+                totalDebit+=obj.montant
             }
             else{
-                button.innerHTML="Unsubscribe";
-                this.Observable.subscribe(this);
-                this.state=true;
-                this.update(this.data);
+                totalCredit+=obj.montant;
             }
-        })
-        //add element in the div
-        this.div.appendChild(input);        
-        this.div.appendChild(title);        
-        this.div.appendChild(button);        
-        container.appendChild(this.div);        
+        });
+        this.solde=totalCredit - totalDebit;
+        this.render();
     }
-    
-    update(data: number) {
-        console.log(`this.state:${this.state}`);
-        if(this.state){
-            this.data=data;
-            console.log(`this.seuil: ${this.seuil} ${this.data}`)
-        if(this.data < this.seuil){
-            console.log(`if(this.data < this.seuil) `);
-            this.div.className="on";
-        }
-        else{
-            this.div.className="off";
-        }
-        }
-        
-    }
-    setSeuil(value:number){
-        this.seuil=value;
-
-        this.update(this.data);
+    render(){
+        this.view.renderSolde(this.solde);
     }
 }

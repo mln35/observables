@@ -5,35 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.e308ff8e.css">
-    <title>Document</title>
+    <title>Caisse</title>
 <script src="/style.e308ff8e.js"></script></head>
 <body>
-    <header>
-        <h1>Control System</h1>
-    </header>
-    <main class="principal-container">
-        <input type="number" id="humidity-control">
-        <button id="add">+</button>
-        <h2>Pompes</h2>
-        <div id="pompe-container">
-            <!-- <div class="off" id="pompe1">
-                <input type="number" class="seuil" >
-                <h4>pompe1</h4>
-                <button id="subs">Unsubscribe</button>
+    <header>Comtability management</header>
+    <main>
+        <form>
+            <div>
+                <label>Nom</label>
+                <input type="text" id="fullname" class="form-control">
             </div>
-            <div class="off" id="pompe2">
-                <input type="number" class="seuil" >
-                <h4>pompe1</h4>
-                <button>Unsubscribe</button>
+            <div>
+                <label>Type:</label>
+                <select id="type" class="form-control">
+                    <option value="Debit">Debit</option>
+                    <option value="Credit">Credit</option>
+                </select>
             </div>
-            <div class="off" id="pompe3">
-                <input type="number" class="seuil" >
-                <h4>pompe1</h4>
-                <button>Unsubscribe</button>
-            </div> -->
-
+            <div>
+                <label>Montant</label>
+                <input type="text" id="montant" class="form-control">
+            </div>
+            <div>
+                <label>Motif</label>
+                <input type="text" id="motif" class="form-control">
+            </div>
+            <button type="button" id="valid">Valider</button>
+        </form>
+        <div class="observers-space">
+            <div id="card-left">
+                <div id="solde">
+                    <h3>Solde:</h3><h3 id="solde-value">000</h3>
+                </div>
+                <div id="transaction-number">
+                    <table>
+                        <thead>
+                            <tr><th colspan="2">nombre de transaction</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Debits</td> <td>Credits</td>
+                            </tr>
+                            <tr>
+                                <td>145022</td> <td>85642</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="transaction-list">
+                <ul id="liste">
+                    <li>1000F ont ete deposer suite à un achat d'ordinateur</li>
+                </ul>
+            </div>
+            <div id="card-right">
+                <div id="state">
+                    <h2>Etat:</h2>
+                    <h2 class="crediteur">Crediteur</h2>
+                </div>
+                <div id="transaction-autor">
+                    <table>
+                        <thead>
+                            <th>Personnal</th> <th>Debit</th> <th>Credit</th>
+                        </thead>
+                        <tbody>
+                            <td>Mohamed</td> <td>1500</td> <td>1500</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
-    <script src="/app.c61986b1.js"></script>
+    <!-- <script  src="app.ts"></script> -->
 </body>
 </html>

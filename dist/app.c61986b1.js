@@ -175,6 +175,56 @@ function () {
 }();
 
 exports.Humidity = Humidity;
+},{}],"function/function.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.domCreation = void 0;
+/*
+        let container=document.querySelector("#pompe-container");
+        //div_id=pompe
+        this.div.id=this.name;//observer
+        //input
+        let input=document.createElement('input');
+        input.className="seuil";
+        input.type="number";
+        input.value=this.seuil.toString();
+        input.addEventListener('change', (e:Event)=>{
+            this.setSeuil(+input.value);//observer
+        })
+        //title h4
+        let title=document.createElement('h4');
+        title.innerHTML=this.name;//observer
+        //button
+        let button=document.createElement('button');
+        button.innerHTML="Unsubscribe";
+        button.addEventListener('click', (e:Event)=>{
+            
+            if(button.innerHTML==="Unsubscribe"){
+                button.innerHTML="Subscribe";
+                this.Observable.unsubscribe(this);//observable
+                this.state=false;//observer
+                this.div.className="unsubs";
+            }
+            else{
+                button.innerHTML="Unsubscribe";
+                this.Observable.subscribe(this);//observer
+                this.state=true;//observer
+                this.update(this.data);//observer
+            }
+        })
+        //add element in the div
+        this.div.appendChild(input);
+        this.div.appendChild(title);//
+        this.div.appendChild(button); //
+        container.appendChild(this.div)
+        */
+
+var domCreation = function domCreation(name, seuil) {};
+
+exports.domCreation = domCreation;
 },{}],"Classes/observer.ts":[function(require,module,exports) {
 "use strict";
 
@@ -182,6 +232,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Vanne = void 0;
+
+var function_1 = require("../function/function");
 
 var Vanne =
 /** @class */
@@ -194,11 +246,10 @@ function () {
     this.Observable = Observable;
     this.div = document.createElement('div');
     this.state = true;
+    (0, function_1.domCreation)(this);
     this.Observable.subscribe(this);
-    console.log("this.data: ".concat(this.data));
     this.state = true;
     var container = document.querySelector("#pompe-container"); //div_id=pompe
-    // this.div.className="off";
 
     this.div.id = this.name; //input
 
@@ -265,7 +316,7 @@ function () {
 }();
 
 exports.Vanne = Vanne;
-},{}],"app.ts":[function(require,module,exports) {
+},{"../function/function":"function/function.ts"}],"app.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -290,14 +341,8 @@ var Add = document.querySelector("#add");
 Add.addEventListener('click', function (e) {
   var vanne = new observer_1.Vanne("vanne".concat(counter), 30, humiditySensor);
   counter++;
-}); // const vanne1=new Vanne("vanne1", 35, humiditySensor);
-// const vanne2=new Vanne("vanne2", 20, humiditySensor);
-// const vanne3=new Vanne("vanne3", 10, humiditySensor);
-// humiditySensor.subscribe(vanne1);
-// humiditySensor.subscribe(vanne2);
-// humiditySensor.subscribe(vanne3);
-
-humiditySensor.testFunction(f, g); // humiditySensor.setHumidity(20);
+});
+humiditySensor.testFunction(f, g);
 },{"./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -326,7 +371,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55476" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52521" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

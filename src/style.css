@@ -1,25 +1,68 @@
-#pompe-container{
+form{
+    width: 90%;
+    margin: auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    height: 80px;
+    position: relative;
+    top: 20px;
     flex-wrap: wrap;
+    padding-top: 35px;
     background-color: silver;
+    border-radius: 10px;
 }
-h4, h2{
+form button{
+    height: 30px;
+}
+.form-control{
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid blue;
+}
+header{
     text-align: center;
 }
-.off{
+.observers-space{
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    top: 40px;
+}
+#card-left{
+    width: 15%;
+    border: 2px solid black;
+}
+#solde{
+    display: flex;
+    
+}
+
+#transaction-list{
+    border: 2px solid black;
+    width: 50%;
+}
+#liste{
+    height: 50vh;
+    overflow: auto;
+}
+
+
+#card-right{
+    width: 25%;
+    border: 2px solid black;
+}
+#transaction-autor table{
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+#state{
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
     background-color: red;
-    border: 2px solid black;
-}
-.on{
-    background-color: green;
-    border: 2px solid black;
-}
-.unsubs{
-    background-color: #ccc;
-    border: 2px solid black;
-}
-.seuil{
-    display: inline-block;
-    width: 100px;
 }
