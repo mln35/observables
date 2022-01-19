@@ -66,3 +66,11 @@ header{
     justify-content: center;
     background-color: red;
 }
+.credit{
+    background-color: green;
+    border-bottom: solid 2px white;
+}
+.debit{
+    background-color: red;
+    border-bottom: solid 2px white;
+}
