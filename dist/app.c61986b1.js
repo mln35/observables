@@ -123,200 +123,226 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Humidity = void 0;
+exports.Transaction = void 0;
 
-var Humidity =
+var Transaction =
 /** @class */
 function () {
-  function Humidity(humidity) {
+  function Transaction() {
     var _this = this;
 
-    this.humidity = humidity;
     this.observers = [];
-    this.controller = document.querySelector('#humidity-control');
-    this.controller.value = this.humidity.toString();
-    this.controller.addEventListener('change', function (e) {
-      _this.setHumidity(+_this.controller.value);
+    this.transactionList = [];
+    this.btn = document.querySelector('#valid');
+    this.fullNameInput = document.querySelector('#fullname');
+    this.typeInput = document.querySelector('#type');
+    this.montantInput = document.querySelector('#montant');
+    this.motifInput = document.querySelector('#motif');
+    this.btn.addEventListener('click', function (e) {
+      console.log(_this.fullNameInput.value);
+
+      _this.transactionList.push({
+        nom: _this.fullNameInput.value,
+        type: _this.typeInput.value,
+        montant: +_this.montantInput.value,
+        motif: _this.motifInput.value
+      });
+
+      console.log(_this.transactionList);
+
+      _this.notifyObserver();
     });
   }
 
-  Humidity.prototype.subscribe = function (observer) {
+  Transaction.prototype.subscribe = function (observer) {
     this.observers.push(observer);
     this.notifyObserver();
   };
 
-  Humidity.prototype.unsubscribe = function (observer) {
+  Transaction.prototype.unsubscribe = function (observer) {
     this.observers = this.observers.filter(function (obs) {
       return obs !== observer;
     });
     console.log("Unsubscribe--Observers Array", this.observers);
   };
 
-  Humidity.prototype.notifyObserver = function () {
+  Transaction.prototype.notifyObserver = function () {
     var _this = this;
 
     this.observers.forEach(function (element) {
-      console.log("this.humidity: ".concat(_this.humidity));
-      element.update(_this.humidity);
+      element.update(_this.transactionList);
     });
   };
 
-  Humidity.prototype.setHumidity = function (value) {
-    this.humidity = value;
-    this.notifyObserver();
-  };
-
-  Humidity.prototype.testFunction = function (f, g) {
-    f();
-    g();
-  };
-
-  return Humidity;
+  return Transaction;
 }();
 
-exports.Humidity = Humidity;
-},{}],"function/function.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.domCreation = void 0;
-/*
-        let container=document.querySelector("#pompe-container");
-        //div_id=pompe
-        this.div.id=this.name;//observer
-        //input
-        let input=document.createElement('input');
-        input.className="seuil";
-        input.type="number";
-        input.value=this.seuil.toString();
-        input.addEventListener('change', (e:Event)=>{
-            this.setSeuil(+input.value);//observer
-        })
-        //title h4
-        let title=document.createElement('h4');
-        title.innerHTML=this.name;//observer
-        //button
-        let button=document.createElement('button');
-        button.innerHTML="Unsubscribe";
-        button.addEventListener('click', (e:Event)=>{
-            
-            if(button.innerHTML==="Unsubscribe"){
-                button.innerHTML="Subscribe";
-                this.Observable.unsubscribe(this);//observable
-                this.state=false;//observer
-                this.div.className="unsubs";
-            }
-            else{
-                button.innerHTML="Unsubscribe";
-                this.Observable.subscribe(this);//observer
-                this.state=true;//observer
-                this.update(this.data);//observer
-            }
-        })
-        //add element in the div
-        this.div.appendChild(input);
-        this.div.appendChild(title);//
-        this.div.appendChild(button); //
-        container.appendChild(this.div)
-        */
-
-var domCreation = function domCreation(name, seuil) {};
-
-exports.domCreation = domCreation;
+exports.Transaction = Transaction;
 },{}],"Classes/observer.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Vanne = void 0;
+exports.State = exports.NbTransactions = exports.Solde = void 0; //class solde implementation
 
-var function_1 = require("../function/function");
-
-var Vanne =
+var Solde =
 /** @class */
 function () {
-  function Vanne(name, seuil, Observable) {
-    var _this = this;
-
-    this.name = name;
-    this.seuil = seuil;
-    this.Observable = Observable;
-    this.div = document.createElement('div');
-    this.state = true;
-    (0, function_1.domCreation)(this);
-    this.Observable.subscribe(this);
-    this.state = true;
-    var container = document.querySelector("#pompe-container"); //div_id=pompe
-
-    this.div.id = this.name; //input
-
-    var input = document.createElement('input');
-    input.className = "seuil";
-    input.type = "number";
-    input.value = this.seuil.toString();
-    input.addEventListener('change', function (e) {
-      _this.setSeuil(+input.value);
-    }); //title h4
-
-    var title = document.createElement('h4');
-    title.innerHTML = this.name; //button
-
-    var button = document.createElement('button');
-    button.innerHTML = "Unsubscribe";
-    button.addEventListener('click', function (e) {
-      if (button.innerHTML === "Unsubscribe") {
-        button.innerHTML = "Subscribe";
-
-        _this.Observable.unsubscribe(_this);
-
-        _this.state = false;
-        _this.div.className = "unsubs";
-      } else {
-        button.innerHTML = "Unsubscribe";
-
-        _this.Observable.subscribe(_this);
-
-        _this.state = true;
-
-        _this.update(_this.data);
-      }
-    }); //add element in the div
-
-    this.div.appendChild(input);
-    this.div.appendChild(title);
-    this.div.appendChild(button);
-    container.appendChild(this.div);
+  function Solde(solde, view) {
+    this.solde = solde;
+    this.view = view;
+    this.render();
   }
 
-  Vanne.prototype.update = function (data) {
-    console.log("this.state:".concat(this.state));
-
-    if (this.state) {
-      this.data = data;
-      console.log("this.seuil: ".concat(this.seuil, " ").concat(this.data));
-
-      if (this.data < this.seuil) {
-        console.log("if(this.data < this.seuil) ");
-        this.div.className = "on";
-      } else {
-        this.div.className = "off";
+  Solde.prototype.update = function (data) {
+    console.log('update', data);
+    var totalDebit = 0;
+    var totalCredit = 0;
+    data.forEach(function (obj) {
+      if (obj.type === 'Debit') {
+        totalDebit += obj.montant;
+        console.log('tDeb', totalDebit);
       }
-    }
+
+      if (obj.type === 'Credit') {
+        totalCredit += obj.montant;
+        console.log('tCred', totalCredit);
+      }
+    });
+    this.solde = totalCredit - totalDebit;
+    console.log('solde', this.solde);
+    this.render();
   };
 
-  Vanne.prototype.setSeuil = function (value) {
-    this.seuil = value;
-    this.update(this.data);
+  Solde.prototype.render = function () {
+    this.view.renderSolde(this.solde);
   };
 
-  return Vanne;
+  return Solde;
 }();
 
-exports.Vanne = Vanne;
-},{"../function/function":"function/function.ts"}],"app.ts":[function(require,module,exports) {
+exports.Solde = Solde;
+
+var NbTransactions =
+/** @class */
+function () {
+  function NbTransactions(nb, view) {
+    this.nb = nb;
+    this.view = view;
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    this.render();
+  }
+
+  NbTransactions.prototype.update = function (data) {
+    var _this = this;
+
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    console.log('update', data);
+    data.forEach(function (obj) {
+      if (obj.type === 'Debit') {
+        _this.totalDebit += obj.montant;
+        console.log('tDeb', _this.totalDebit);
+      }
+
+      if (obj.type === 'Credit') {
+        _this.totalCredit += obj.montant;
+        console.log('tCred', _this.totalCredit);
+      }
+    });
+    this.render();
+  };
+
+  NbTransactions.prototype.render = function () {
+    this.view.renderNbTrans(this.totalDebit, this.totalCredit);
+  };
+
+  return NbTransactions;
+}();
+
+exports.NbTransactions = NbTransactions;
+
+var State =
+/** @class */
+function () {
+  function State(nb, view) {
+    this.nb = nb;
+    this.view = view;
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    this.render();
+  }
+
+  State.prototype.update = function (data) {
+    var _this = this;
+
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    console.log('update', data);
+    data.forEach(function (obj) {
+      if (obj.type === 'Debit') {
+        _this.totalDebit += obj.montant;
+        console.log('tDeb', _this.totalDebit);
+      }
+
+      if (obj.type === 'Credit') {
+        _this.totalCredit += obj.montant;
+        console.log('tCred', _this.totalCredit);
+      }
+    });
+    this.render();
+  };
+
+  State.prototype.render = function () {
+    var state = this.totalCredit < this.totalDebit ? 'Debiteur' : 'Crediteur';
+    this.view.renderState(state);
+  };
+
+  return State;
+}();
+
+exports.State = State;
+},{}],"view/viewHandler.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var View =
+/** @class */
+function () {
+  function View() {
+    this.soldeValue = document.querySelector('#solde-value');
+  }
+
+  View.prototype.renderSolde = function (solde) {
+    this.soldeValue.innerHTML = solde.toString();
+  };
+
+  View.prototype.renderNbTrans = function (totalDebit, totalCredit) {
+    document.querySelector('#totalDebit').innerHTML = totalDebit.toString();
+    document.querySelector('#totalCredit').innerHTML = totalCredit.toString();
+  };
+
+  View.prototype.renderState = function (state) {
+    var divClass = state === 'Debiteur' ? 'debiteur' : 'crediteur';
+    document.querySelector('#state-text').className = divClass;
+    document.querySelector('#state-text').innerHTML = state;
+  };
+
+  View.prototype.renderList = function (data) {//TODO 
+    // implement list rendering
+  };
+
+  return View;
+}();
+
+exports.View = View;
+},{}],"app.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -327,23 +353,17 @@ var observable_1 = require("./Classes/observable");
 
 var observer_1 = require("./Classes/observer");
 
-var f = function f() {
-  console.log("Function1 passed in arg");
-};
+var viewHandler_1 = require("./view/viewHandler"); // const controller = new Controller();
 
-var g = function g() {
-  console.log("Function2 passed in arg");
-};
 
-var counter = 1;
-var humiditySensor = new observable_1.Humidity(21);
-var Add = document.querySelector("#add");
-Add.addEventListener('click', function (e) {
-  var vanne = new observer_1.Vanne("vanne".concat(counter), 30, humiditySensor);
-  counter++;
-});
-humiditySensor.testFunction(f, g);
-},{"./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var transaction = new observable_1.Transaction();
+var solde = new observer_1.Solde(0, new viewHandler_1.View());
+transaction.subscribe(solde);
+var nbTrans = new observer_1.NbTransactions(0, new viewHandler_1.View());
+transaction.subscribe(nbTrans);
+var state = new observer_1.State(0, new viewHandler_1.View());
+transaction.subscribe(state);
+},{"./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts","./view/viewHandler":"view/viewHandler.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -371,7 +391,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52521" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36811" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

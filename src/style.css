@@ -64,5 +64,13 @@ header{
     margin: auto;
     display: flex;
     justify-content: center;
-    background-color: red;
+    /* background-color: red; */
+}
+
+
+.crediteur{
+    background-color:green;
+}
+.debiteur{
+    background-color:red;
 }

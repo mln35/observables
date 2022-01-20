@@ -64,15 +64,6 @@ header{
     margin: auto;
     display: flex;
     justify-content: center;
-    /* background-color: red; */
+    background-color: red;
 }
-
-
-.crediteur{
-    background-color:green;
-}
-.debiteur{
-    background-color:red;
-}
-
-/*# sourceMappingURL=/style.e308ff8e.css.map */
+/*# sourceMappingURL=index.af814d91.css.map */

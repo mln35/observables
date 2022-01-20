@@ -1,20 +1,19 @@
-import { Humidity } from "./Classes/observable";
-import { Vanne } from "./Classes/observer";
-const f=()=>{
-    console.log("Function1 passed in arg");
-}
-const g=()=>{
-    console.log("Function2 passed in arg");
-}
-let counter=1;
+import { Transaction } from "./Classes/observable";
+import { Solde,NbTransactions, State } from "./Classes/observer";
+import { View } from "./view/viewHandler";
 
-const humiditySensor=new Humidity(21);
-let Add=document.querySelector("#add");
-Add.addEventListener('click', (e:Event)=>{
-    const vanne=new Vanne(`vanne${counter}`, 30, humiditySensor);
-    counter++;
-})
-humiditySensor.testFunction(f, g);
+// const controller = new Controller();
 
+const transaction = new Transaction();
 
+const solde = new Solde(0,new View());
 
+transaction.subscribe(solde);
+
+const nbTrans = new NbTransactions(0,new View());
+
+transaction.subscribe(nbTrans);
+
+const state = new State(0,new View());
+
+transaction.subscribe(state);
