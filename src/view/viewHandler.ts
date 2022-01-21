@@ -1,21 +1,25 @@
 export class View {
-  private soldeValue: HTMLAnchorElement;
-  constructor() {
-    let soldeValue = document.querySelector(
-      "#solde-value"
-    ) as HTMLAnchorElement;
-  }
-  renderSolde(solde: number) {
-    this.soldeValue.innerHTML = solde.toString();
-  }
-  // renderList(obj:{fullname:string, type:string, montant:number, motif:string}) {
-  //     console.log("View class", `${obj.fullname} ${obj.type} ${obj.montant} ${obj.motif}`);
-  //     let ul=document.querySelector("#liste");
-  //     ul.insertAdjacentHTML("beforeend", `
-  //     <li class=${obj.type==="Debit"?"debit":"credit"}>
-  //     ${obj.montant} F</li>
-  //     `)
-  // }
+
+  private soldeValue:HTMLElement;
+
+    constructor(){
+        this.soldeValue=document.querySelector('#solde-value') as HTMLElement;
+    }
+    renderSolde(solde:number){
+        this.soldeValue.innerHTML=solde.toString();
+    }
+
+    renderNbTrans(totalDebit: number, totalCredit: number) {
+        document.querySelector('#totalDebit').innerHTML = totalDebit.toString();
+        document.querySelector('#totalCredit').innerHTML = totalCredit.toString();        
+    }
+
+    renderState(state: string) {
+        let divClass = state === 'Debiteur' ?'debiteur':'crediteur';
+        document.querySelector('#state-text').className = divClass;
+        document.querySelector('#state-text').innerHTML = state;
+    }
+  
   renderList(data: any[]) {
     let ul = document.querySelector("#liste");
     ul.innerHTML = "";

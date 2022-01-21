@@ -184,7 +184,7 @@ exports.Transaction = Transaction;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Personal = exports.List = exports.Solde = void 0; //class solde implementation
+exports.Personal = exports.List = exports.State = exports.NbTransactions = exports.Solde = void 0; //class solde implementation
 
 var Solde =
 /** @class */
@@ -196,16 +196,22 @@ function () {
   }
 
   Solde.prototype.update = function (data) {
+    console.log('update', data);
     var totalDebit = 0;
     var totalCredit = 0;
     data.forEach(function (obj) {
-      if (obj.type === "Debit") {
+      if (obj.type === 'Debit') {
         totalDebit += obj.montant;
-      } else {
+        console.log('tDeb', totalDebit);
+      }
+
+      if (obj.type === 'Credit') {
         totalCredit += obj.montant;
+        console.log('tCred', totalCredit);
       }
     });
     this.solde = totalCredit - totalDebit;
+    console.log('solde', this.solde);
     this.render();
   };
 
@@ -216,7 +222,86 @@ function () {
   return Solde;
 }();
 
-exports.Solde = Solde;
+exports.Solde = Solde; //Nombre de transaction
+
+var NbTransactions =
+/** @class */
+function () {
+  function NbTransactions(nb, view) {
+    this.nb = nb;
+    this.view = view;
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    this.render();
+  }
+
+  NbTransactions.prototype.update = function (data) {
+    console.log('update', data);
+    this.totalCredit = data.filter(function (obj) {
+      return obj.type === "Credit";
+    }).length;
+    this.totalDebit = data.filter(function (obj) {
+      return obj.type === "Debit";
+    }).length; // data.forEach(obj =>{
+    //     if(obj.type==='Debit'){
+    //         this.totalDebit+=obj.montant
+    //         console.log('tDeb',this.totalDebit);
+    //     }
+    //     if(obj.type === 'Credit'){
+    //         this.totalCredit+=obj.montant;
+    //         console.log('tCred',this.totalCredit);
+    //     }
+    // });
+
+    this.render();
+  };
+
+  NbTransactions.prototype.render = function () {
+    this.view.renderNbTrans(this.totalDebit, this.totalCredit);
+  };
+
+  return NbTransactions;
+}();
+
+exports.NbTransactions = NbTransactions;
+
+var State =
+/** @class */
+function () {
+  function State(nb, view) {
+    this.nb = nb;
+    this.view = view;
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    this.render();
+  }
+
+  State.prototype.update = function (data) {
+    var _this = this;
+
+    this.totalDebit = 0;
+    this.totalCredit = 0;
+    data.forEach(function (obj) {
+      if (obj.type === 'Debit') {
+        _this.totalDebit += obj.montant;
+      }
+
+      if (obj.type === 'Credit') {
+        _this.totalCredit += obj.montant;
+      }
+    });
+    this.render();
+  };
+
+  State.prototype.render = function () {
+    var state = this.totalCredit - this.totalDebit < 0 ? 'Debiteur' : 'Crediteur';
+    this.view.renderState(state);
+  };
+
+  return State;
+}();
+
+exports.State = State;
 
 var List =
 /** @class */
@@ -247,35 +332,13 @@ function () {
       return obj.fullname;
     })));
     console.log("Update personalTrans", this.uniqueName);
-    this.view.renderPersonal(data, this.uniqueName); // for (let i = 0; i < this.uniqueName.length; i++) {
-    //   let arr1 = data.filter((e) => {
-    //     return e.fullname === this.uniqueName[i];
-    //   });
-    //   let name = arr1[0].fullname;
-    //   let totalDebit = 0;
-    //   let totalCredit=0;
-    //   arr1.forEach((e) => {
-    //       if(e.type==="Debit"){
-    //         totalDebit += e.montant;
-    //       }
-    //       else{
-    //         totalCredit += e.montant;
-    //       }
-    //   });
-    //   console.log(`name:${name} totalCredit:${totalCredit} totalDebit:${totalDebit}`);
-    //   this.view.renderPersonal(name, totalDebit, totalCredit);
-    // }
+    this.view.renderPersonal(data, this.uniqueName);
   };
 
   return Personal;
 }();
 
-exports.Personal = Personal; // let array=[
-//     {name:"maxi", trans:45}, {name:"sidi", trans:25}, {name:"sidi", trans:52},
-//     {name:"rama", trans:27},{name:"maxi", trans:72}, {name:"salif", trans:78},
-//     {name:"rama", trans:95} , {name:"salif", trans:15}, {name:"maxi", trans:7},
-//     {name:"sidi", trans:49}, {name:"rama", trans:74}, {name:"salif", trans:45}
-// ]
+exports.Personal = Personal;
 },{}],"view/viewHandler.ts":[function(require,module,exports) {
 "use strict";
 
@@ -288,20 +351,23 @@ var View =
 /** @class */
 function () {
   function View() {
-    var soldeValue = document.querySelector("#solde-value");
+    this.soldeValue = document.querySelector('#solde-value');
   }
 
   View.prototype.renderSolde = function (solde) {
     this.soldeValue.innerHTML = solde.toString();
-  }; // renderList(obj:{fullname:string, type:string, montant:number, motif:string}) {
-  //     console.log("View class", `${obj.fullname} ${obj.type} ${obj.montant} ${obj.motif}`);
-  //     let ul=document.querySelector("#liste");
-  //     ul.insertAdjacentHTML("beforeend", `
-  //     <li class=${obj.type==="Debit"?"debit":"credit"}>
-  //     ${obj.montant} F</li>
-  //     `)
-  // }
+  };
 
+  View.prototype.renderNbTrans = function (totalDebit, totalCredit) {
+    document.querySelector('#totalDebit').innerHTML = totalDebit.toString();
+    document.querySelector('#totalCredit').innerHTML = totalCredit.toString();
+  };
+
+  View.prototype.renderState = function (state) {
+    var divClass = state === 'Debiteur' ? 'debiteur' : 'crediteur';
+    document.querySelector('#state-text').className = divClass;
+    document.querySelector('#state-text').innerHTML = state;
+  };
 
   View.prototype.renderList = function (data) {
     var ul = document.querySelector("#liste");
@@ -357,12 +423,20 @@ var viewHandler_1 = require("./view/viewHandler");
 
 var observer_2 = require("./Classes/observer");
 
+var observer_3 = require("./Classes/observer");
+
 var view = new viewHandler_1.View();
 var transaction = new observable_1.Transaction();
 var list = new observer_1.List(view);
 transaction.subscribe(list);
 var personal = new observer_2.Personal(view);
 transaction.subscribe(personal);
+var solde = new observer_1.Solde(0, view);
+transaction.subscribe(solde);
+var nbTrans = new observer_3.NbTransactions(0, new viewHandler_1.View());
+transaction.subscribe(nbTrans);
+var state = new observer_1.State(0, new viewHandler_1.View());
+transaction.subscribe(state);
 },{"./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts","./view/viewHandler":"view/viewHandler.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -391,7 +465,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56454" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57066" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

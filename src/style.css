@@ -34,15 +34,16 @@ header{
 #card-left{
     width: 15%;
     border: 2px solid black;
+    border-radius: 5px;
 }
 #solde{
-    display: flex;
-    
+    display: flex; 
 }
 
 #transaction-list{
     border: 2px solid black;
     width: 50%;
+    border-radius: 5px;
 }
 #liste{
     height: 50vh;
@@ -53,6 +54,7 @@ header{
 #card-right{
     width: 25%;
     border: 2px solid black;
+    border-radius: 5px;
 }
 #transaction-autor table{
     width: 100%;
@@ -64,7 +66,6 @@ header{
     margin: auto;
     display: flex;
     justify-content: center;
-    background-color: red;
 }
 .credit{
     background-color: green;
@@ -73,4 +74,10 @@ header{
 .debit{
     background-color: red;
     border-bottom: solid 2px white;
+}
+.debiteur{
+    background-color: red;
+}
+.crediteur{
+    background-color: green;
 }
