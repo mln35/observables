@@ -1,6 +1,7 @@
 body{
     font-family:Arial, Helvetica, sans-serif;
     font-size:14px;
+padding-bottom: 100px;
 }
 
 form{
@@ -10,16 +11,14 @@ form{
     display: flex;
     justify-content: center;
     height: 80px;
-    /* position: relative; */
     top: 20px;
     flex-wrap: wrap;
     padding-top: 35px;
-    /* background-color: silver; */
     border-radius: 10px;
 }
 form button{
     width:40%;
-    background-color: #4a47e9; /* Green */
+    background-color: #4a47e9;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -31,7 +30,6 @@ form button{
     border-radius: 5px;
     margin-top: 20px;
 
-    /* padding: 10px 12px 10px 12px; */
 }
 
   
@@ -39,15 +37,8 @@ form button:hover {
     background-color: #6562e9; /* Green */
     color: rgb(247, 235, 235);
   }
-.form-control{
-    /* font-size: 14px; */
-    /* font-weight: 600; */
-    /* outline: none; */
-    /* padding: 10px; */
-    /* border-radius: 8px; */
-    /* border: 2px solid blue; */
-}
-header{
+
+.title{
     text-align: center;
 }
 .observers-space{
@@ -59,8 +50,6 @@ header{
 #card-left{
     padding: 0 10px 0 10px;
     width: 15%;
-    /* border: 2px solid black; */
-    /* background-color:rgb(224 198 255); */
     box-shadow: 0 0 2px blue;
     border-radius: 5px;
 }
@@ -69,8 +58,6 @@ header{
 }
 
 #transaction-list{
-    /* border: 2px solid black; */
-    /* background-color:rgb(224 198 255); */
     box-shadow: 0 0 2px blue;
     font-size:16px;
     width: 50%;
@@ -85,10 +72,7 @@ header{
 
 #card-right{
     width: 25%;
-    /* background-color:rgb(224 198 255); */
     box-shadow: 0 0 2px blue;
-
-    /* border: 2px solid black; */
     border-radius: 5px;
 }
 #transaction-autor table{
@@ -118,7 +102,7 @@ header{
     background-color: rgb(252, 113, 0);
 }
 .crediteur{
-    /* background-color: rgb(70, 196, 70); */
+    background-color: rgb(70, 196, 70);
 }
 
 input,
@@ -129,7 +113,6 @@ textarea, select {
   margin-bottom: 5px;
   margin-top: 2px;
   margin-right: 15px !important;
-  /* width: 100%; */
   box-sizing: border-box;
   color: #2C3E50;
   font-size: 16px;
