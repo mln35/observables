@@ -14,16 +14,13 @@ export class Solde implements IObserver{
         data.forEach(obj =>{
             if(obj.type==='Debit'){
                 totalDebit+=obj.montant
-                console.log('tDeb',totalDebit);
             }
             
             if(obj.type === 'Credit'){
                 totalCredit+=obj.montant;
-                console.log('tCred',totalCredit);
             }
         });
         this.solde=totalCredit - totalDebit;
-        console.log('solde',this.solde);
         this.render();
     }
     render(){
@@ -31,7 +28,7 @@ export class Solde implements IObserver{
     }
 }
 
-
+//Nombre de transaction
 export class NbTransactions implements IObserver{
     totalDebit=0;
     totalCredit=0;
@@ -39,22 +36,13 @@ export class NbTransactions implements IObserver{
         this.render();
     }
     update(data: any []) {
-        this.totalDebit=0;
-        this.totalCredit=0;
-        console.log('update', data);
-
-
-        data.forEach(obj =>{
-            if(obj.type==='Debit'){
-                this.totalDebit+=obj.montant
-                console.log('tDeb',this.totalDebit);
-            }
-            
-            if(obj.type === 'Credit'){
-                this.totalCredit+=obj.montant;
-                console.log('tCred',this.totalCredit);
-            }
-        });
+        
+        this.totalCredit=data.filter((obj)=>{
+            return obj.type==="Credit";
+        }).length;
+        this.totalDebit=data.filter((obj)=>{
+            return obj.type==="Debit";
+        }).length;
         
         this.render();
     }
@@ -72,39 +60,47 @@ export class State implements IObserver{
     update(data: any []) {
         this.totalDebit=0;
         this.totalCredit=0;
-        console.log('update', data);
-
-
         data.forEach(obj =>{
             if(obj.type==='Debit'){
                 this.totalDebit+=obj.montant
-                console.log('tDeb',this.totalDebit);
             }
             
             if(obj.type === 'Credit'){
                 this.totalCredit+=obj.montant;
-                console.log('tCred',this.totalCredit);
             }
         });
         
         this.render();
     }
     render(){
-        let state = this.totalCredit < this.totalDebit?'Debiteur':'Crediteur';
+        let state = this.totalCredit - this.totalDebit <0?'Debiteur':'Crediteur';
         this.view.renderState(state);
     }
 }
 
-
-export class List implements IObserver{
-    data: any[]=[];
-    constructor(private view:View){
-        this.render(this.data);
-    }
-    update(data: any []) {
-        this.render(data);
-    }
-    render(data:any[]){
-        this.view.renderList(data);
-    }
+export class List implements IObserver {
+  constructor(private view: View) {}
+  update(data: any[]) {
+    this.view.renderList(data);
+  }
 }
+
+export class Personal implements IObserver {
+  private distinctNames: any[];
+  constructor(private view: View) {
+  }
+  update(data: any[]) {
+    this.distinctNames = Array.from(
+      new Set(
+        data.map((obj) => {
+          return obj.fullname;
+        })
+      )
+    );
+    this.view.renderPersonal(data, this.distinctNames);
+
+    
+  }
+}
+
+

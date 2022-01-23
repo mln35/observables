@@ -133,24 +133,24 @@ function () {
 
     this.observers = [];
     this.transactionList = [];
-    this.btn = document.querySelector('#valid');
-    this.fullNameInput = document.querySelector('#fullname');
-    this.typeInput = document.querySelector('#type');
-    this.montantInput = document.querySelector('#montant');
-    this.motifInput = document.querySelector('#motif');
-    this.btn.addEventListener('click', function (e) {
-      console.log(_this.fullNameInput.value);
-
+    var htmlFullname = document.querySelector("#fullname");
+    var htmlType = document.querySelector("#type");
+    var htmlMontant = document.querySelector("#montant");
+    var htmlMotif = document.querySelector("#motif");
+    var button = document.querySelector("#valid");
+    button.addEventListener('click', function (e) {
       _this.transactionList.push({
-        nom: _this.fullNameInput.value,
-        type: _this.typeInput.value,
-        montant: +_this.montantInput.value,
-        motif: _this.motifInput.value
+        fullname: htmlFullname.value,
+        type: htmlType.value,
+        montant: +htmlMontant.value,
+        motif: htmlMotif.value
       });
 
-      console.log(_this.transactionList);
-
       _this.notifyObserver();
+
+      htmlFullname.value = "";
+      htmlMontant.value = "";
+      htmlMotif.value = "";
     });
   }
 
@@ -184,7 +184,7 @@ exports.Transaction = Transaction;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.State = exports.NbTransactions = exports.Solde = void 0; //class solde implementation
+exports.Personal = exports.List = exports.State = exports.NbTransactions = exports.Solde = void 0; //class solde implementation
 
 var Solde =
 /** @class */
@@ -202,16 +202,13 @@ function () {
     data.forEach(function (obj) {
       if (obj.type === 'Debit') {
         totalDebit += obj.montant;
-        console.log('tDeb', totalDebit);
       }
 
       if (obj.type === 'Credit') {
         totalCredit += obj.montant;
-        console.log('tCred', totalCredit);
       }
     });
     this.solde = totalCredit - totalDebit;
-    console.log('solde', this.solde);
     this.render();
   };
 
@@ -222,7 +219,7 @@ function () {
   return Solde;
 }();
 
-exports.Solde = Solde;
+exports.Solde = Solde; //Nombre de transaction
 
 var NbTransactions =
 /** @class */
@@ -236,22 +233,12 @@ function () {
   }
 
   NbTransactions.prototype.update = function (data) {
-    var _this = this;
-
-    this.totalDebit = 0;
-    this.totalCredit = 0;
-    console.log('update', data);
-    data.forEach(function (obj) {
-      if (obj.type === 'Debit') {
-        _this.totalDebit += obj.montant;
-        console.log('tDeb', _this.totalDebit);
-      }
-
-      if (obj.type === 'Credit') {
-        _this.totalCredit += obj.montant;
-        console.log('tCred', _this.totalCredit);
-      }
-    });
+    this.totalCredit = data.filter(function (obj) {
+      return obj.type === "Credit";
+    }).length;
+    this.totalDebit = data.filter(function (obj) {
+      return obj.type === "Debit";
+    }).length;
     this.render();
   };
 
@@ -280,23 +267,20 @@ function () {
 
     this.totalDebit = 0;
     this.totalCredit = 0;
-    console.log('update', data);
     data.forEach(function (obj) {
       if (obj.type === 'Debit') {
         _this.totalDebit += obj.montant;
-        console.log('tDeb', _this.totalDebit);
       }
 
       if (obj.type === 'Credit') {
         _this.totalCredit += obj.montant;
-        console.log('tCred', _this.totalCredit);
       }
     });
     this.render();
   };
 
   State.prototype.render = function () {
-    var state = this.totalCredit < this.totalDebit ? 'Debiteur' : 'Crediteur';
+    var state = this.totalCredit - this.totalDebit < 0 ? 'Debiteur' : 'Crediteur';
     this.view.renderState(state);
   };
 
@@ -304,6 +288,41 @@ function () {
 }();
 
 exports.State = State;
+
+var List =
+/** @class */
+function () {
+  function List(view) {
+    this.view = view;
+  }
+
+  List.prototype.update = function (data) {
+    this.view.renderList(data);
+  };
+
+  return List;
+}();
+
+exports.List = List;
+
+var Personal =
+/** @class */
+function () {
+  function Personal(view) {
+    this.view = view;
+  }
+
+  Personal.prototype.update = function (data) {
+    this.distinctNames = Array.from(new Set(data.map(function (obj) {
+      return obj.fullname;
+    })));
+    this.view.renderPersonal(data, this.distinctNames);
+  };
+
+  return Personal;
+}();
+
+exports.Personal = Personal;
 },{}],"view/viewHandler.ts":[function(require,module,exports) {
 "use strict";
 
@@ -334,8 +353,39 @@ function () {
     document.querySelector('#state-text').innerHTML = state;
   };
 
-  View.prototype.renderList = function (data) {//TODO 
-    // implement list rendering
+  View.prototype.renderList = function (data) {
+    var ul = document.querySelector("#liste");
+    ul.innerHTML = "";
+    data.forEach(function (obj) {
+      ul.insertAdjacentHTML("beforeend", "\n        <li class=".concat(obj.type === "Debit" ? "debit" : "credit", ">\n        ").concat(obj.montant, " F ont \xE9t\xE9 ").concat(obj.type === "Debit" ? "Retiré" : "Déposé", "\n        par ").concat(obj.fullname, " pour ").concat(obj.motif, " </li>\n        "));
+    });
+  };
+
+  View.prototype.renderPersonal = function (data, uniqueName) {
+    var table = document.querySelector("#autor");
+    table.innerHTML = "";
+
+    var _loop_1 = function _loop_1(i) {
+      var arr1 = data.filter(function (e) {
+        return e.fullname === uniqueName[i];
+      });
+      var name = arr1[0].fullname;
+      var totalDebit = 0;
+      var totalCredit = 0;
+      arr1.forEach(function (e) {
+        if (e.type === "Debit") {
+          totalDebit += e.montant;
+        } else {
+          totalCredit += e.montant;
+        }
+      });
+      console.log("name:".concat(name, " totalCredit:").concat(totalCredit, " totalDebit:").concat(totalDebit));
+      table.insertAdjacentHTML("beforeend", "\n        <tr>\n            <td>".concat(name, "</td>\n            <td>").concat(totalDebit, "</td>\n            <td>").concat(totalCredit, "</td>\n        </tr>\n        "));
+    };
+
+    for (var i = 0; i < uniqueName.length; i++) {
+      _loop_1(i);
+    }
   };
 
   return View;
@@ -353,13 +403,21 @@ var observable_1 = require("./Classes/observable");
 
 var observer_1 = require("./Classes/observer");
 
-var viewHandler_1 = require("./view/viewHandler"); // const controller = new Controller();
+var viewHandler_1 = require("./view/viewHandler");
 
+var observer_2 = require("./Classes/observer");
 
+var observer_3 = require("./Classes/observer");
+
+var view = new viewHandler_1.View();
 var transaction = new observable_1.Transaction();
-var solde = new observer_1.Solde(0, new viewHandler_1.View());
+var list = new observer_1.List(view);
+transaction.subscribe(list);
+var personal = new observer_2.Personal(view);
+transaction.subscribe(personal);
+var solde = new observer_1.Solde(0, view);
 transaction.subscribe(solde);
-var nbTrans = new observer_1.NbTransactions(0, new viewHandler_1.View());
+var nbTrans = new observer_3.NbTransactions(0, new viewHandler_1.View());
 transaction.subscribe(nbTrans);
 var state = new observer_1.State(0, new viewHandler_1.View());
 transaction.subscribe(state);
@@ -391,7 +449,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36811" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35843" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

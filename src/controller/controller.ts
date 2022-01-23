@@ -1,30 +1,31 @@
 export class Controller{
-
-    btn = document.querySelector('#valid') as HTMLButtonElement;
-    fullNameInput = document.querySelector('#fullname') as HTMLInputElement;
-    typeInput = document.querySelector('#type') as HTMLInputElement;
-    montantInput = document.querySelector('#montant') as HTMLInputElement;
-    motifInput = document.querySelector('#motif') as HTMLInputElement;
-    data={
-        nom:'',
-        type:'',
+    private obj={
+        fullname:"",
+        type:"",
         montant:0,
-        motif:''
+        motif:""
     }
-
+    
     constructor(){
-        this.btn.addEventListener('click', (e) => {
-            console.log('button clicked');
-            
-            this.data.nom = this.fullNameInput.value;
-            this.data.type = this.typeInput.value;
-            this.data.montant = +this.montantInput.value;
-            this.data.motif = this.motifInput.value;
-            console.log(this.data);
+        let htmlFullname=document.querySelector("#fullname") as HTMLInputElement;
+        let htmlType=document.querySelector("#type") as HTMLSelectElement;
+        let htmlMontant=document.querySelector("#montant") as HTMLInputElement;
+        let htmlMotif=document.querySelector("#motif") as HTMLInputElement;
+        let button=document.querySelector("#valid") as HTMLButtonElement;
+        button.addEventListener('click', (e)=>{
 
+            this.obj.type=htmlType.value;
+            this.obj.fullname=htmlFullname.value;
+            
+            this.obj.montant=+htmlMontant.value;
+            this.obj.motif=htmlMotif.value;
+            // console.log(`
+            // ${this.fullname} ${this.type} ${this.montant} ${this.motif}
+            // `)
         })
     }
-    getData():{nom:string,type:string,montant:number,motif:string}{
-        return this.data;
+    getData(){
+       return this.obj;
     }
+    
 }
